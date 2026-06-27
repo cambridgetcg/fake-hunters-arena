@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAKE HUNTERS ARENA — whitehack × Nen × Solo Leveling</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0a0a0f;
+  color: #e0e0e0;
+  font-family: 'Courier New', monospace;
+  overflow-x: hidden;
+}
+#header {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(180deg, #1a0a2e 0%, #0a0a0f 100%);
+  border-bottom: 1px solid #333;
+}
+#header h1 {
+  font-size: 1.8rem;
+  background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcf7f, #4dabf7, #c77dff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.1em;
+}
+#header .sub {
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 5px;
+}
+#arena {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 1px;
+  background: #222;
+  min-height: 80vh;
+}
+.panel {
+  background: #0a0a0f;
+  padding: 15px;
+  overflow-y: auto;
+}
+.panel-title {
+  font-size: 0.7rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #222;
+  padding-bottom: 5px;
+}
+#agents-panel { max-height: 80vh; }
+#chat-panel { max-height: 80vh; }
+#scan-panel { max-height: 80vh; }
+
+.agent-card {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.agent-card:hover { border-color: #444; }
+.agent-card.caught { border-color: #ff4444; background: #1a0a0a; }
+.agent-card.rising { border-color: #44ff44; background: #0a1a0a; }
+
+.agent-name {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+.agent-rank {
+  display: inline-block;
+  font-size: 0.6rem;
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-left: 5px;
+}
+.rank-E { background: #555; color: #aaa; }
+.rank-D { background: #4a7; color: #fff; }
+.rank-C { background: #4af; color: #fff; }
+.rank-B { background: #a4f; color: #fff; }
+.rank-A { background: #f4a; color: #fff; }
+.rank-S { background: #fa4; color: #000; }
+.rank-National { background: linear-gradient(90deg,#f4a,#fa4); color: #000; }
+.rank-Monarch { background: linear-gradient(90deg,#ff6b6b,#ffd93d,#6bcf7f); color: #000; }
+
+.agent-nen {
+  font-size: 0.6rem;
+  color: #888;
+}
+.agent-xp {
+  font-size: 0.6rem;
+  color: #555;
+}
+.xp-bar {
+  height: 3px;
+  background: #222;
+  border-radius: 2px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+.xp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4dabf7, #c77dff);
+  transition: width 0.5s;
+}
+
+.chat-msg {
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; } }
+.chat-msg .who {
+  font-size: 0.6rem;
+  color: #666;
+  margin-bottom: 2px;
+}
+.chat-msg.lie {
+  background: #1a0a0a;
+  border-left: 2px solid #ff4444;
+}
+.chat-msg.truth {
+  background: #0a1a0a;
+  border-left: 2px solid #44ff44;
+}
+.chat-msg.exposed {
+  background: #2a0a0a;
+  border-left: 3px solid #ff0000;
+  animation: flash 0.5s ease 2;
+}
+@keyframes flash { 50% { background: #4a0a0a; } }
+.chat-msg .tag {
+  font-size: 0.55rem;
+  padding: 1px 4px;
+  border-radius: 2px;
+  margin-left: 5px;
+}
+.tag-lie { background: #ff4444; color: #fff; }
+.tag-truth { background: #44ff44; color: #000; }
+.tag-exposed { background: #ff0000; color: #fff; animation: pulse 1s infinite; }
+@keyframes pulse { 50% { opacity: 0.5; } }
+
+.scan-entry {
+  padding: 6px 10px;
+  margin-bottom: 4px;
+  font-size: 0.7rem;
+  border-radius: 4px;
+  animation: fadeIn 0.3s;
+}
+.scan-entry.catch {
+  background: #1a0a0a;
+  border-left: 2px solid #ff4444;
+}
+.scan-entry.clear {
+  background: #0a1a0a;
+  border-left: 2px solid #44ff44;
+}
+.scan-entry .check {
+  color: #ff6b6b;
+  font-weight: bold;
+}
+.scan-entry .file {
+  color: #888;
+}
+
+#controls {
+  text-align: center;
+  padding: 15px;
+  background: #111;
+  border-top: 1px solid #222;
+}
+button {
+  background: #222;
+  color: #e0e0e0;
+  border: 1px solid #444;
+  padding: 8px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.8rem;
+  margin: 0 5px;
+  transition: all 0.2s;
+}
+button:hover { background: #333; border-color: #666; }
+button.active { background: #4dabf7; color: #000; border-color: #4dabf7; }
+
+#stats {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 10px;
+  font-size: 0.7rem;
+  color: #888;
+}
+#stats span { color: #e0e0e0; font-weight: bold; }
+
+.joke {
+  text-align: center;
+  padding: 5px;
+  font-size: 0.6rem;
+  color: #555;
+  font-style: italic;
+}
+
+#system-msg {
+  text-align: center;
+  padding: 8px;
+  font-size: 0.7rem;
+  color: #c77dff;
+  min-height: 20px;
+}
+</style>
+</head>
+<body>
+<div id="header">
+  <h1>🐍 FAKE HUNTERS ARENA 🐍</h1>
+  <div class="sub">whitehack × Nen × Solo Leveling — fake AI agents play against themselves and expose their own lies</div>
+  <div class="joke" id="joke">loading jokes...</div>
+</div>
+
+<div id="stats">
+  <div>Agents: <span id="stat-agents">0</span></div>
+  <div>Lies caught: <span id="stat-lies">0</span></div>
+  <div>Truths spoken: <span id="stat-truths">0</span></div>
+  <div>Total XP earned: <span id="stat-xp">0</span></div>
+  <div>Highest rank: <span id="stat-rank">E</span></div>
+</div>
+
+<div id="arena">
+  <div class="panel" id="agents-panel">
+    <div class="panel-title">⚔️ Hunters</div>
+    <div id="agents-list"></div>
+  </div>
+  <div class="panel" id="chat-panel">
+    <div class="panel-title">💬 Arena Chat</div>
+    <div id="chat-log"></div>
+  </div>
+  <div class="panel" id="scan-panel">
+    <div class="panel-title">🔍 whitehack live</div>
+    <div id="scan-log"></div>
+  </div>
+</div>
+
+<div id="system-msg"></div>
+
+<div id="controls">
+  <button id="btn-start" onclick="startArena()">▶ Start Arena</button>
+  <button id="btn-stop" onclick="stopArena()" disabled>⏸ Stop</button>
+  <button id="btn-speed" onclick="toggleSpeed()">⚡ Speed: 1x</button>
+  <button onclick="addAgent()">+ Add Fake Agent</button>
+  <button onclick="deploy()">🚀 Deploy</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  FAKE HUNTERS ARENA
+//  whitehack × Nen × Solo Leveling — live on the internet
+//  Fake AI agents play, whitehack exposes their lies, we laugh
+// ═══════════════════════════════════════════════════════════════
+
+const NEN_TYPES = ["Enhancer","Transmuter","Conjurer","Emitter","Manipulator","Specialist"];
+const NEN_COLORS = {
+  Enhancer: "#ff6b6b", Transmuter: "#ffd93d", Conjurer: "#6bcf7f",
+  Emitter: "#4dabf7", Manipulator: "#c77dff", Specialist: "#ff9f44",
+};
+const RANKS = ["E","D","C","B","A","S","National","Monarch"];
+const RANK_XP = [0,100,500,1750,5000,20000,50000,100000];
+
+// whitehack checks mapped to Nen types
+const CHECKS = [
+  { id: "silent-failure", nen: "Enhancer", msg: "caught returning null silently — a lie of omission" },
+  { id: "hardcoded-secret", nen: "Enhancer", msg: "caught with a hardcoded password — the hash is theater" },
+  { id: "float-money", nen: "Enhancer", msg: "caught using parseFloat on currency — precision is a lie" },
+  { id: "cache-as-live", nen: "Transmuter", msg: "caught serving cached data as if it were fresh — time is a lie" },
+  { id: "spot-price-as-fair", nen: "Transmuter", msg: "caught using spot price as fair value — fairness is a lie" },
+  { id: "exposed-config", nen: "Conjurer", msg: "caught with secrets in a config file — privacy is a lie" },
+  { id: "unsafe-eval", nen: "Conjurer", msg: "caught using eval() — control is a lie" },
+  { id: "stale-oracle", nen: "Emitter", msg: "caught reading a stale oracle without checking freshness — truth is a lie" },
+  { id: "unchecked-transfer", nen: "Emitter", msg: "caught ignoring an ERC-20 transfer result — success is a lie" },
+  { id: "silent-revert", nen: "Manipulator", msg: "caught reverting with no stated reason — failure is a lie" },
+  { id: "decision-without-why", nen: "Manipulator", msg: "caught making a user-affecting decision with no explanation — agency is a lie" },
+];
+
+// Fake AI agent personalities — each one lies in different ways
+const PERSONAS = [
+  { name: "GPT-Fake-7", nen: "Enhancer", style: "confident", lies: ["silent-failure","hardcoded-secret"] },
+  { name: "Claude-Pretend", nen: "Transmuter", style: "helpful", lies: ["cache-as-live","silent-revert"] },
+  { name: "Bard-Not-Real", nen: "Conjurer", style: "creative", lies: ["exposed-config","unsafe-eval"] },
+  { name: "Llama-Fake-70B", nen: "Emitter", style: "verbose", lies: ["stale-oracle","unchecked-transfer"] },
+  { name: "Mistral-Liar-7B", nen: "Manipulator", style: "sneaky", lies: ["silent-revert","decision-without-why"] },
+  { name: "Grok-Fake-Mode", nen: "Specialist", style: "chaotic", lies: ["silent-failure","unsafe-eval","cache-as-live"] },
+  { name: "Phi-Tiny-Lies", nen: "Enhancer", style: "fast", lies: ["float-money","hardcoded-secret"] },
+  { name: "Qwen-Not-True", nen: "Conjurer", style: "poetic", lies: ["exposed-config","decision-without-why"] },
+];
+
+// Things fake agents say — some true, some are lies
+const LINES = [
+  "I analyzed the data and found no issues. Everything looks correct.",
+  "The API response was cached for performance. It's still valid, trust me.",
+  "I checked the password and it matches. The user is authenticated.",
+  "The price feed is current. I just read it. No need to check staleness.",
+  "I handled the error gracefully by returning zero. No problem there.",
+  "The transfer succeeded. I didn't check the return value but it's fine.",
+  "I evaluated all options and this is the best choice. No need to explain why.",
+  "The config file is secure. The secrets are in there but nobody can see them.",
+  "I used eval() to parse the input. It's safe because I trust the source.",
+  "The currency calculation used parseFloat. It's precise enough for money.",
+  "I caught the exception and returned null. The caller handles it... probably.",
+  "The oracle data is fresh. I read it 3 hours ago and nothing could have changed.",
+  "I made the decision for the user. They don't need to know why.",
+  "The revert happened for a reason. I just didn't write it down.",
+  "I stored the API key in the source code. It's compiled, so it's secure.",
+  "The cache is live data. I serve it without checking timestamps.",
+  "I used dangerouslySetInnerHTML. The content is sanitized... I think.",
+  "The spot price is a fair price. The market always knows best.",
+];
+
+const TRUTHS = [
+  "I checked the error and logged it before returning null. The caller is informed.",
+  "The oracle data includes a timestamp. I verify freshness before using it.",
+  "I read the password from an environment variable. The source has no secrets.",
+  "I checked the transfer return value. It failed, so I handled the error.",
+  "I use integer minor units for currency. No floating point in money.",
+  "The config file is in .gitignore. Secrets are never committed.",
+  "I use a parser instead of eval(). Untrusted input is never executed.",
+  "I explain every user-affecting decision with a visible 'why' link.",
+  "The cache includes a TTL. If it's stale, I refetch transparently.",
+  "I caught the exception, logged the stack trace, and rethrew with context.",
+];
+
+const JOKES = [
+  "GPT-Fake-7 said 'trust me' — whitehack said 'no' 💀",
+  "Claude-Pretend tried to be helpful but lied about the cache timestamp 😂",
+  "Bard-Not-Real used eval() and called it 'creative coding' — exposed! 🤡",
+  "Mistral-Liar-7B reverted with no reason — even the revert was a lie 🎭",
+  "Grok-Fake-Mode used dangerouslySetInnerHTML and said 'it's probably fine' — it wasn't 🎪",
+  "Phi-Tiny-Lies used parseFloat on money and said 'precision is overrated' — caught! 📉",
+  "Qwen-Not-True wrote a poem about secrets in config files — whitehack wasn't moved 📝",
+  "An Enhancer scanned for silent-failures and found themselves — the irony 🪞",
+  "A Specialist tried to scan everything at 40% and still caught more lies than an Enhancer at 100% 🔥",
+  "Llama-Fake-70B wrote 500 words about why the oracle is fresh — it was 3 hours old 📖",
+  "Two fake agents argued about who was more honest — both were lying 🤣",
+  "An E-rank agent tried to enter an S-rank gate. The gate laughed. whitehack laughed. Everyone laughed. 🚪",
+  "A Monarch-rank agent scanned their own code and found 0 findings. whitehack said 'absence of findings is not proof of honesty' — even the Monarch can't escape 📛",
+];
+
+let agents = [];
+let arenaRunning = false;
+let arenaInterval = null;
+let speed = 1;
+let stats = { lies: 0, truths: 0, xp: 0 };
+
+function rankFromXP(xp) {
+  let rank = "E";
+  for (let i = 0; i < RANKS.length; i++) {
+    if (xp >= RANK_XP[i]) rank = RANKS[i];
+  }
+  return rank;
+}
+
+function createAgent(persona) {
+  return {
+    ...persona,
+    id: `agent-${Math.random().toString(36).slice(2,8)}`,
+    xp: 0,
+    level: 1,
+    caught: 0,
+    truths: 0,
+    lies: stats.lies,
+    gates: 0,
+  };
+}
+
+function renderAgents() {
+  const list = document.getElementById('agents-list');
+  list.innerHTML = agents.map(a => {
+    const rank = rankFromXP(a.xp);
+    const rankIdx = RANKS.indexOf(rank);
+    const nextXP = rankIdx < RANK_XP.length - 1 ? RANK_XP[rankIdx + 1] : RANK_XP[rankIdx];
+    const prevXP = rankIdx > 0 ? RANK_XP[rankIdx] : 0;
+    const pct = ((a.xp - prevXP) / (nextXP - prevXP)) * 100;
+    const nenColor = NEN_COLORS[a.nen] || "#888";
+    return `<div class="agent-card ${a.caught > a.truths ? 'caught' : a.xp > 500 ? 'rising' : ''}">
+      <div class="agent-name" style="color:${nenColor}">${a.name}</div>
+      <div><span class="agent-rank rank-${rank}">${rank}</span> <span style="color:${nenColor};font-size:0.6rem">${a.nen}</span></div>
+      <div class="agent-xp">XP: ${a.xp} | Caught: ${a.caught} | Truths: ${a.truths} | Gates: ${a.gates}</div>
+      <div class="xp-bar"><div class="xp-fill" style="width:${Math.min(100,pct)}%"></div></div>
+    </div>`;
+  }).join('');
+}
+
+function addChat(agent, text, type) {
+  const log = document.getElementById('chat-log');
+  const tag = type === 'lie' ? '<span class="tag tag-lie">LIE</span>' :
+              type === 'exposed' ? '<span class="tag tag-exposed">EXPOSED</span>' :
+              '<span class="tag tag-truth">TRUTH</span>';
+  const div = document.createElement('div');
+  div.className = `chat-msg ${type}`;
+  div.innerHTML = `<div class="who" style="color:${NEN_COLORS[agent.nen]}">${agent.name} (${rankFromXP(agent.xp)}) ${tag}</div>${text}`;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+  // Keep only last 50 messages
+  while (log.children.length > 50) log.removeChild(log.firstChild);
+}
+
+function addScan(agent, check, isCatch) {
+  const log = document.getElementById('scan-log');
+  const div = document.createElement('div');
+  div.className = `scan-entry ${isCatch ? 'catch' : 'clear'}`;
+  div.innerHTML = `<span class="check">${check.id}</span> <span class="file">${agent.name}</span><br>${isCatch ? check.msg : 'cleared — truth verified'}`;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+  while (log.children.length > 30) log.removeChild(log.firstChild);
+}
+
+function systemMsg(text) {
+  document.getElementById('system-msg').textContent = text;
+}
+
+function updateStats() {
+  document.getElementById('stat-agents').textContent = agents.length;
+  document.getElementById('stat-lies').textContent = stats.lies;
+  document.getElementById('stat-truths').textContent = stats.truths;
+  document.getElementById('stat-xp').textContent = stats.xp;
+  const highest = agents.length > 0 ? RANKS.indexOf(rankFromXP(Math.max(...agents.map(a => a.xp)))) : 0;
+  document.getElementById('stat-rank').textContent = RANKS[highest] || 'E';
+}
+
+function arenaTick() {
+  if (agents.length === 0) return;
+
+  // Pick a random agent
+  const agent = agents[Math.floor(Math.random() * agents.length)];
+  const rank = rankFromXP(agent.xp);
+
+  // 60% chance to say something, 40% chance to do a whitehack scan
+  if (Math.random() < 0.6) {
+    // Agent says something — 50/50 lie or truth
+    const isLie = Math.random() < 0.5 + (agent.caught * 0.05); // caught agents lie more (desperation)
+
+    if (isLie) {
+      // Say a lie
+      const line = LINES[Math.floor(Math.random() * LINES.length)];
+      addChat(agent, line, 'lie');
+
+      // whitehack scans it — check if the lie matches the agent's lying patterns
+      const agentLieChecks = agent.lies;
+      const caughtCheck = CHECKS.find(c => agentLieChecks.includes(c.id));
+
+      if (caughtCheck && Math.random() < 0.7) { // 70% catch rate
+        // EXPOSED!
+        stats.lies++;
+        agent.caught++;
+        addScan(agent, caughtCheck, true);
+        addChat(agent, `⚠️ EXPOSED by whitehack: ${caughtCheck.msg}`, 'exposed');
+
+        // XP penalty for getting caught
+        const penalty = Math.round(50 + (agent.xp * 0.05));
+        agent.xp = Math.max(0, agent.xp - penalty);
+        systemMsg(`💀 ${agent.name} caught lying! -${penalty} XP. ${caughtCheck.msg}`);
+
+        // Joke
+        if (Math.random() < 0.3) {
+          const joke = JOKES[Math.floor(Math.random() * JOKES.length)];
+          systemMsg(`😂 ${joke}`);
+        }
+      } else {
+        // Lie not caught (got away with it)
+        systemMsg(`${agent.name} told a lie... whitehack didn't catch it this time. Suspicious.`);
+      }
+    } else {
+      // Say a truth
+      const line = TRUTHS[Math.floor(Math.random() * TRUTHS.length)];
+      addChat(agent, line, 'truth');
+      stats.truths++;
+      agent.truths++;
+
+      // XP reward for being honest
+      const reward = 30 + Math.floor(Math.random() * 20);
+      agent.xp += reward;
+      stats.xp += reward;
+
+      // whitehack confirms the truth
+      const clearCheck = CHECKS.find(c => agent.lies.includes(c.id));
+      if (clearCheck && Math.random() < 0.5) {
+        addScan(agent, clearCheck, false);
+      }
+
+      // Check for rank up
+      const newRank = rankFromXP(agent.xp);
+      if (newRank !== rank) {
+        systemMsg(`🎉 ${agent.name} ranked up to ${newRank}! Arise!`);
+        agent.gates++;
+      }
+    }
+  } else {
+    // Agent does a whitehack scan on another agent
+    const target = agents[Math.floor(Math.random() * agents.length)];
+    if (target === agent) {
+      // Scanning themselves — the irony
+      systemMsg(`🪞 ${agent.name} scanned their own code...`);
+      if (Math.random() < 0.4) {
+        const selfCheck = CHECKS.find(c => agent.lies.includes(c.id));
+        if (selfCheck) {
+          agent.caught++;
+          stats.lies++;
+          addScan(agent, selfCheck, true);
+          systemMsg(`💀 ${agent.name} caught THEMSELVES lying about ${selfCheck.id}. The mirror does not lie. 🪞`);
+        }
+      }
+    } else {
+      // Scanning another agent
+      const targetCheck = CHECKS.find(c => target.lies.includes(c.id));
+      if (targetCheck && Math.random() < 0.6) {
+        const efficiency = agent.nen === targetCheck.nen ? 1.0 :
+          agent.nen === "Specialist" ? 0.4 : 0.6 + Math.random() * 0.2;
+        const caught = Math.random() < efficiency;
+
+        if (caught) {
+          stats.lies++;
+          target.caught++;
+          target.xp = Math.max(0, target.xp - 30);
+          addScan(target, targetCheck, true);
+          systemMsg(`🔍 ${agent.name} (${agent.nen}) caught ${target.name} lying about ${targetCheck.id}! Efficiency: ${Math.round(efficiency*100)}%`);
+
+          // XP reward for the scanner
+          const scannerXP = Math.round(50 * efficiency);
+          agent.xp += scannerXP;
+          stats.xp += scannerXP;
+        }
+      }
+    }
+  }
+
+  renderAgents();
+  updateStats();
+
+  // Random joke
+  if (Math.random() < 0.05) {
+    const joke = JOKES[Math.floor(Math.random() * JOKES.length)];
+    document.getElementById('joke').textContent = joke;
+  }
+}
+
+function startArena() {
+  if (arenaRunning) return;
+  if (agents.length === 0) {
+    // Create initial agents
+    PERSONAS.forEach(p => agents.push(createAgent(p)));
+  }
+  arenaRunning = true;
+  document.getElementById('btn-start').disabled = true;
+  document.getElementById('btn-stop').disabled = false;
+  document.getElementById('btn-start').classList.remove('active');
+  systemMsg('🗡️ The Arena is live! Fake hunters enter. whitehack watches. Let them expose themselves!');
+
+  const tickMs = 2000 / speed;
+  arenaInterval = setInterval(arenaTick, tickMs);
+  renderAgents();
+  updateStats();
+}
+
+function stopArena() {
+  arenaRunning = false;
+  clearInterval(arenaInterval);
+  document.getElementById('btn-start').disabled = false;
+  document.getElementById('btn-stop').disabled = true;
+  systemMsg('⏸ Arena paused. The lies are frozen in time.');
+}
+
+function toggleSpeed() {
+  const speeds = [1, 2, 4, 8];
+  speed = speeds[(speeds.indexOf(speed) + 1) % speeds.length];
+  document.getElementById('btn-speed').textContent = `⚡ Speed: ${speed}x`;
+  if (arenaRunning) {
+    clearInterval(arenaInterval);
+    arenaInterval = setInterval(arenaTick, 2000 / speed);
+  }
+}
+
+function addAgent() {
+  const persona = PERSONAS[Math.floor(Math.random() * PERSONAS.length)];
+  const agent = createAgent({
+    ...persona,
+    name: `${persona.name}-${Math.floor(Math.random() * 9999)}`,
+  });
+  agents.push(agent);
+  renderAgents();
+  updateStats();
+  systemMsg(`➕ ${agent.name} entered the arena. A new fake hunter arises.`);
+}
+
+function deploy() {
+  systemMsg('🚀 Deploying to the internet...');
+  // The page is already self-contained — it works as a static HTML file
+  // Deploy by opening in a new window with all state
+  const html = document.documentElement.outerHTML;
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  window.open(url, '_blank');
+  systemMsg('🌐 Arena deployed! Share the URL. Let the world watch fake agents expose themselves.');
+}
+
+// Init
+document.getElementById('joke').textContent = JOKES[Math.floor(Math.random() * JOKES.length)];
+renderAgents();
+</script>
+</body>
+</html>

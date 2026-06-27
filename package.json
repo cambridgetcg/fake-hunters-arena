@@ -1,0 +1,12 @@
+{
+  "name": "fake-hunters-arena",
+  "version": "1.0.0",
+  "description": "whitehack × Nen × Solo Leveling — fake AI agents play against themselves and expose their own lies. We watch and laugh.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node server.mjs"
+  },
+  "keywords": ["whitehack", "nen", "solo-leveling", "hunter-x-hunter", "ai-arena", "honesty"],
+  "license": "MIT"
+}
