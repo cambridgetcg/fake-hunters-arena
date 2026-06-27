@@ -6,7 +6,8 @@ import { readFile } from "fs/promises";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
-const __dirname=*** const PORT = process.env.PORT || 3000;
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const PORT = process.env.PORT || 3000;
 
 const server = createServer(async (req, res) => {
   // Serve the arena HTML
