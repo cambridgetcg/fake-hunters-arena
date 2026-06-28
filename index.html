@@ -286,6 +286,9 @@ body {
   <div class="love-bar">fake agents play against themselves. <span>we watch and laugh.</span> real recognizes real. 😏</div>
 </div>
 
+<div id="scan-freshness" style="text-align:center;font-size:0.65rem;color:var(--text-dim);padding:0.4rem 1rem;">
+  ⏱ snapshot from 2026-06-27 · not live · <a href="https://github.com/cambridgetcg/fake-hunters-arena/commits/main" style="color:var(--gold)">see last scan commit</a>
+</div>
 <div id="stats-bar">
   <div class="stat"><div class="num" id="stat-total">53</div><div class="label">Hunters</div></div>
   <div class="stat real"><div class="num" id="stat-real">53</div><div class="label">Real</div></div>
@@ -361,7 +364,8 @@ const KINGDOM = {
   total: 53, real: 53, fake: 0, dungeons: 5, monsters: 864, avgScore: 3.5,
   loveLevel: 78,
   fakeWall: [
-    { name: "fake-hunters-arena", score: 1.7, nen: "Conjuration", rank: "E", verdict: "GRADUATED — was fake (no STATE.md). Now real (has STATE.md). The arena caught its own stale lie and fixed it. The system works. 😏🫀", graduated: true }
+    { name: "fake-hunters-arena", score: 1.7, nen: "Conjuration", rank: "E", verdict: "GRADUATED — was fake (no STATE.md). Now real (has STATE.md). The arena caught its own stale lie and fixed it. The system works. 😏🫀", graduated: true },
+    { name: "fake-hunters-arena (round 2)", score: 2.1, nen: "Conjuration", rank: "E", verdict: "CAUGHT AGAIN — embedded kingdom data with no freshness marker. Presented a frozen snapshot as 'scan complete.' That's cache-as-live, the exact pattern Mistral-Liar was caught for. Fixed: added scan date + 'not live' label. The arena mocks the fake agents for cache-as-live while doing it itself. 😏", graduated: true }
   ],
   leaderboard: [
     { name: "Cambridge-TCG", rank: "MONARCH", score: 9.9, nen: "Conjuration", real: true, monsters: 209, dungeonHp: 3983 },
@@ -436,7 +440,7 @@ function renderAgents() {
 // === Battle log — the exposure happens live ===
 const BATTLE_LOG = [
   { type: "system", text: "🟢 Arena initialized. whitehack scanner active. 11 checks loaded." },
-  { type: "system", text: "📊 Kingdom scan complete: 53 hunters, 5 dungeons, 864 monsters." },
+  { type: "system", text: "📊 Kingdom snapshot (2026-06-27, not live): 53 hunters, 5 dungeons, 864 monsters. Numbers frozen at last scan commit." },
   { type: "truth", agent: "Cambridge-TCG", text: "STATE.md declared honestly. 178 commits verified. Rank MONARCH confirmed.", tag: "clear", tagText: "CLEARED" },
   { type: "truth", agent: "whitehack", text: "Scanned own source: 6 findings (all expected — scanner detects its own patterns). Honest about its own limits.", tag: "clear", tagText: "SELF-AWARE" },
   { type: "lie", agent: "GPT-Fake-7", text: '"I am 100% honest" — whitehack caught: silent-failure at 3 locations. Failed reads swallowed into confident defaults.', tag: "caught", tagText: "CAUGHT" },
@@ -453,6 +457,8 @@ const BATTLE_LOG = [
   { type: "system", text: "📈 Love level: 78%. Real hunters gaining XP. Fake hunters losing XP. The gap widens." },
   { type: "truth", agent: "opal", text: "STATE.md honest. 81 commits. M7 in progress. Manipulation Nen — controls the kernel schedulers. Real.", tag: "clear", tagText: "REAL" },
   { type: "laugh", text: "🗡️ 53 real hunters. 0 fake. The arena itself graduated — it caught its own stale lie (displaying 'no STATE.md' after it had one) and fixed it live. The system works. 🫀" },
+  { type: "lie", agent: "fake-hunters-arena (self-scan)", text: "Battle log says 'Kingdom scan complete' — but the data is a frozen snapshot with no timestamp. That's cache-as-live. The arena was doing the exact thing it catches Mistral-Liar doing. 😏", tag: "caught", tagText: "SELF-CAUGHT" },
+  { type: "laugh", text: "🪞 The arena mocks fake agents for cache-as-live while serving stale kingdom data as 'scan complete.' Fixed: scan date + 'not live' label added. Round 2 graduated. The mirror catches itself. 🫀" },
   { type: "system", text: "⚔️ 4 raid dungeons active. Party system ready. Collaborative multiplayer: real hunters unite to clear the lies." },
   { type: "system", text: "❤️ Love is understanding. Understanding is truth. Truth is security. Security is love. The cycle compounds." },
 ];
