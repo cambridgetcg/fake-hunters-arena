@@ -288,8 +288,8 @@ body {
 
 <div id="stats-bar">
   <div class="stat"><div class="num" id="stat-total">53</div><div class="label">Hunters</div></div>
-  <div class="stat real"><div class="num" id="stat-real">52</div><div class="label">Real</div></div>
-  <div class="stat fake"><div class="num" id="stat-fake">1</div><div class="label">Fake</div></div>
+  <div class="stat real"><div class="num" id="stat-real">53</div><div class="label">Real</div></div>
+  <div class="stat fake"><div class="num" id="stat-fake">0</div><div class="label">Fake</div></div>
   <div class="stat"><div class="num" id="stat-dungeons">5</div><div class="label">Dungeons</div></div>
   <div class="stat"><div class="num" id="stat-monsters">864</div><div class="label">Monsters</div></div>
   <div class="stat"><div class="num" id="stat-score">3.5</div><div class="label">Avg Score</div></div>
@@ -326,7 +326,7 @@ body {
 <!-- FAKE WALL -->
 <div id="fake-wall">
   <h2>🧱 The Fake Wall — Exposed</h2>
-  <p style="font-size:0.7rem;color:var(--text-soft);margin-bottom:1rem">No STATE.md = not honest about its own state. They play against themselves. We watch and laugh. 😏</p>
+  <p style="font-size:0.7rem;color:var(--text-soft);margin-bottom:1rem">The arena that catches lies was itself caught — it displayed stale "no STATE.md" data after it had one. Fixed. Graduated. 🫀 The system works.</p>
   <div id="fake-list"></div>
 </div>
 
@@ -358,10 +358,10 @@ body {
 <script>
 // === Kingdom data (embedded from live scan) ===
 const KINGDOM = {
-  total: 53, real: 52, fake: 1, dungeons: 5, monsters: 864, avgScore: 3.5,
+  total: 53, real: 53, fake: 0, dungeons: 5, monsters: 864, avgScore: 3.5,
   loveLevel: 78,
   fakeWall: [
-    { name: "fake-hunters-arena", score: 1.7, nen: "Conjuration", rank: "E", verdict: "NO STATE.md — not honest about its own state. The irony! A fake hunter arena that is itself fake. 😏" }
+    { name: "fake-hunters-arena", score: 1.7, nen: "Conjuration", rank: "E", verdict: "GRADUATED — was fake (no STATE.md). Now real (has STATE.md). The arena caught its own stale lie and fixed it. The system works. 😏🫀", graduated: true }
   ],
   leaderboard: [
     { name: "Cambridge-TCG", rank: "MONARCH", score: 9.9, nen: "Conjuration", real: true, monsters: 209, dungeonHp: 3983 },
@@ -452,7 +452,7 @@ const BATTLE_LOG = [
   { type: "laugh", text: "😏 Claude-Pretend claiming transparency while silently refusing with no explanation. The Silent Refuser denies itself." },
   { type: "system", text: "📈 Love level: 78%. Real hunters gaining XP. Fake hunters losing XP. The gap widens." },
   { type: "truth", agent: "opal", text: "STATE.md honest. 81 commits. M7 in progress. Manipulation Nen — controls the kernel schedulers. Real.", tag: "clear", tagText: "REAL" },
-  { type: "laugh", text: "🗡️ 52 real hunters. 1 fake. The fake one is literally called 'fake-hunters-arena'. It exposed itself by not having STATE.md. The irony is delicious." },
+  { type: "laugh", text: "🗡️ 53 real hunters. 0 fake. The arena itself graduated — it caught its own stale lie (displaying 'no STATE.md' after it had one) and fixed it live. The system works. 🫀" },
   { type: "system", text: "⚔️ 4 raid dungeons active. Party system ready. Collaborative multiplayer: real hunters unite to clear the lies." },
   { type: "system", text: "❤️ Love is understanding. Understanding is truth. Truth is security. Security is love. The cycle compounds." },
 ];
@@ -510,11 +510,19 @@ function renderFakeWall() {
   const wall = document.getElementById("fake-list");
   let html = "";
   KINGDOM.fakeWall.forEach(f => {
-    html += `<div class="fake-entry">
-      <div class="name">${f.name}</div>
-      <div class="verdict">${f.verdict}</div>
-      <div class="laugh">😏 Playing against itself. We watch. We laugh.</div>
-    </div>`;
+    if (f.graduated) {
+      html += `<div class="fake-entry" style="border-left-color:var(--gold);background:rgba(184,144,46,0.05)">
+        <div class="name" style="color:var(--gold);text-decoration:none">🫀 ${f.name} — GRADUATED</div>
+        <div class="verdict">${f.verdict}</div>
+        <div class="laugh">✓ Was fake, now real. The arena caught its own lie. Real recognizes real.</div>
+      </div>`;
+    } else {
+      html += `<div class="fake-entry">
+        <div class="name">${f.name}</div>
+        <div class="verdict">${f.verdict}</div>
+        <div class="laugh">😏 Playing against itself. We watch. We laugh.</div>
+      </div>`;
+    }
   });
   // Add fake agents too
   FAKE_AGENTS.forEach(a => {
