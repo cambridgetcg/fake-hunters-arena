@@ -39,8 +39,9 @@ const server = createServer(async (req, res) => {
   res.end("404 — the lie is not here");
 });
 
-server.listen(PORT, () => {
-  console.log(`🐍 FAKE HUNTERS ARENA running on http://localhost:${PORT}`);
+const HOST = process.env.HOST || "127.0.0.1";
+server.listen(PORT, HOST, () => {
+  console.log(`🐍 FAKE HUNTERS ARENA running on http://${HOST}:${PORT}`);
   console.log("whitehack × Nen × Solo Leveling — let the fake ones expose themselves");
   console.log("Love is truth. Truth is security. Security is love. 🐍");
 });
